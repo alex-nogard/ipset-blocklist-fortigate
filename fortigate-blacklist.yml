@@ -1,0 +1,62 @@
+# This script is used to declare subnet / ips on Fortigates & add them to addressgroup
+# Created by alexnogard from https://alexnogard.com
+# Feel free to modify it
+- name: create subnets / IPs in fortigate from CSV
+  hosts: fortigates
+  collections:
+  - fortinet.fortios
+  connection: httpapi
+  vars:
+    ansible_httpapi_port: 443
+    ansible_httpapi_use_ssl: yes
+    ansible_httpapi_validate_certs: no
+    vdom: root
+    blacklist_url: "{{ url }}"
+
+  tasks:
+  - name: Run the python script to manipulate the blocklist ipset
+    ansible.builtin.script: ./blacklist-convert.py "{{ blacklist_url }}"
+    args:
+      executable: python3
+    delegate_to: localhost
+    connection: local
+    run_once: true
+    register: python_result
+
+  - name: remove line break from result
+    set_fact:
+            inputcsv: "{{ python_result.stdout | regex_replace('[\\r\\n\\t]+','') }}"
+
+  - name: load the previously created csv files
+    read_csv:
+       path: "{{ inputcsv }}.csv"
+    register: iplist
+
+  - name: create name variable for the addrgrp
+    set_fact:
+            fw_name: "{{ fw_name | default([]) + [{'name': data.name }] }}"
+    loop: "{{ iplist.list }}"
+    loop_control:
+      loop_var: data
+
+  - name: Create the subnets / IP in Fortigate
+    fortios_firewall_address:
+      vdom: root
+      state: present
+      firewall_address:
+        color: 2
+        name: "{{ data.name }}"
+        obj_type: ip
+        subnet: "{{ data.ip }}"
+        type: ipmask
+    loop: "{{ iplist.list }}"
+    loop_control:
+      loop_var: data
+
+  - name: fortios_firewall_addrgrp - Declare the host in the address group
+    fortios_firewall_addrgrp:
+      vdom: root
+      state: present
+      firewall_addrgrp:
+        member: "{{ fw_name }}"
+        name: "{{ inputcsv }}"

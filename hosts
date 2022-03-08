@@ -1,0 +1,10 @@
+[fortigates]
+fortigate01 ansible_host=192.168.1.110 ansible_user="admin" ansible_password="admin" fortios_access_token=nhyNGNbN8z97n688QQ5wfb4gk6tGp4
+fortigate02 ansible_host=192.168.1.109 ansible_user="admin" ansible_password="asmin" fortios_access_token=d686fpgqmxqN4tdmhzkHpsGs8nkG5k
+fortigate03 ansible_host=192.168.1.108 ansible_user="admin" ansible_password="admin" fortios_access_token=39z7jcxbwstj0pcnfsqnw4wf7gtqQg
+
+[fortigates:vars]
+ansible_network_os=fortinet.fortios.fortios
+
+[localhost]
+127.0.0.1
