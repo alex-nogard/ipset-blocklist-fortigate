@@ -1,5 +1,5 @@
-# Fortigate ipset Blacklist
-An Ansible / Python script to import some famous ipset from Firehol github : https://github.com/firehol/blocklist-ipsets and create automated blacklist on Fortigate NGFW
+# Fortigate ipset Blocklist
+An Ansible / Python script to import some famous ipset from Firehol github : https://github.com/firehol/blocklist-ipsets and create automated blocklist on Fortigate NGFW
 
 # How it works ?
 - Download the git project
