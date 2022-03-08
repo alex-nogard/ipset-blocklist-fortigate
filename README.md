@@ -4,7 +4,7 @@ An Ansible / Python script to import some famous ipset from Firehol github : htt
 # How it works ?
 - Download the git project
 - Modify the host file and insert your credentials
-- Enter the command : ansible-playbook fortigate-blacklist.yml -e url=https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/et_botcc.ipset
+- Enter the command : ansible-playbook fortigate-blacklist.yml -e url="RAW URL of the blocklist ipset"
 * You can choose any of the ipset blocklist available on https://github.com/firehol/blocklist-ipsets
 
 # Current limitations :
